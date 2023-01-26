@@ -19,11 +19,22 @@ const DeployForm = () => {
   const [bootstrapperVersion, setBootstrapperVersion] = useState("")
   const [updater, setUpdater] = useState(false)
 
-  const {error, isPending, signup} = useDeploy()
+
+  const {data, deploy, isPending, error} = useDeploy()
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    deploy(email, password, displayName)
+    const fetchUrl = "https://gitlab.com/api/v4/projects/42898999/ref/main/trigger/pipeline?token=glptt-f3fd72a3e2e4eab5402c637e40bb1d6ed02e94a7"
+    const reqConfig = {
+      method: "POST",
+      variables: {
+        ENV: envName,
+        VERSION: version,
+        BOOTSTRAPPER_VERSION: bootstrapperVersion,
+        updater
+      }
+    }
+    deploy(fetchUrl, reqConfig)
 
   }
 
@@ -108,6 +119,7 @@ const DeployForm = () => {
             {error && <Typography>{error}</Typography>}
 
           </Box>
+          {data && <p>there is data</p>}
         </Box>
       </Container>
 
